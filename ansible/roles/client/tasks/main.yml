@@ -1,0 +1,20 @@
+- name: Create area-client user
+  become: true
+  user:
+    name: area-client
+    shell: /bin/bash
+    system: yes
+
+- name: Create client directory
+  become: true
+  become_user: area-client
+  file:
+    "/opt/area/client"
+  state: directory
+
+- name: Build clients
+  include_tasks: "{{ item }}"
+  with_items:
+    - build-mobile.yml
+    - build-web.yml
+  when: client_dir.changed

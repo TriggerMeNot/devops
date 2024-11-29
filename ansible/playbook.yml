@@ -1,0 +1,23 @@
+- name: Base
+  hosts: all
+  roles:
+    - base
+  tags: base
+
+- name: Nix
+  hosts: all
+  roles:
+    - nix
+  tags: nix
+
+- name: Backend
+  hosts: area
+  roles:
+    - backend
+  tags: backend
+
+- name: client
+  hosts: area
+  roles:
+    - client
+  tags: client

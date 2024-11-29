@@ -1,0 +1,68 @@
+- name: Create backend user
+  become: true
+  user:
+    name: area-backend
+    shell: /bin/bash
+    system: yes
+
+- name: Create backend directory
+  become: true
+  become_user: area-backend
+  file:
+    path: "/opt/area/backend"
+    state: directory
+  register: backend_dir
+
+- name: Extract poll application
+  become: true
+  become_user: area-backend
+  unarchive:
+    src: "backend.tar"
+    dest: "/opt/area/backend"
+    extra_opts: "--strip-components=1"
+  when: backend_dir.changed
+
+- name: Install deno
+  become: true
+  become_user: area-backend
+  shell: nix-shell -p deno
+  args:
+    creates: /nix/var/nix/profiles/default/bin/deno
+  when: backend_dir.changed
+
+- name: Get bcrypt version from deno.json
+  become: true
+  become_user: area-backend
+  shell: cat /opt/area/backend/deno.json | jq -r '.dependencies["bcrypt"]'
+  register: bcrypt_version
+  when: backend_dir.changed
+
+- name: Install dependencies
+  become: true
+  become_user: area-backend
+  shell: deno install --allow-scripts=npm:bcrypt@{{ bcrypt_version.stdout }}
+  args:
+    chdir: /opt/area/backend
+  when: backend_dir.changed
+
+- name: Copy the service file
+  become: true
+  template:
+    src: "area-backend.service"
+    dest: "/etc/systemd/system/backend.service"
+    mode: 0644
+  when: backend_dir.changed
+
+- name: Reload systemd
+  become: true
+  systemd:
+    daemon_reload: yes
+  when: backend_dir.changed
+
+- name: Start the service
+  become: true
+  service:
+    name: backend
+    state: started
+    enabled: yes
+  when: backend_dir.changed
