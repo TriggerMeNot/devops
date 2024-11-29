@@ -1,0 +1,26 @@
+- name: Copy the apk.nix file
+  copy:
+    src: "apk.nix"
+    dest: "/opt/area/apk.nix"
+    mode: 0644
+  when: client_dir.changed
+
+- name: Build APK using Nix
+  shell: |
+    nix-shell /opt/area/apk.nix --run "
+      cd /opt/area/client &&
+      npm ci &&
+      npm run build &&
+      npx cap add android &&
+      npx cap sync &&
+      keytool -genkey -v -keystore /opt/area/client/android/keystore -keyalg RSA -keysize 2048 -validity 10000 \
+        -alias area -storepass password -keypass password \
+        -dname 'CN=Equipe, OU=Equipe, O=Epitech, L=Rennes, S=Britany, C=33' &&
+      npx cap build android --androidreleasetype APK --keystorepath /opt/area/client/android/keystore \
+        --keystorealias area --keystorepass password --keystorealiaspass password --signing-type apksigner &&
+      mv /opt/area/client/android/app/build/outputs/apk/release/app-release.apk /var/www/html/area.apk &&
+      rm -rf /opt/area/client/android
+    "
+  args:
+    chdir: /opt/area/client
+  when: client_dir.changed
