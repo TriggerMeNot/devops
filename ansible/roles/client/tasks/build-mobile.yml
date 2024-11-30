@@ -18,7 +18,7 @@
         -dname 'CN=Equipe, OU=Equipe, O=Epitech, L=Rennes, S=Britany, C=33' &&
       npx cap build android --androidreleasetype APK --keystorepath /opt/area/client/android/keystore \
         --keystorealias area --keystorepass password --keystorealiaspass password --signing-type apksigner &&
-      mv /opt/area/client/android/app/build/outputs/apk/release/app-release.apk /var/www/html/area.apk &&
+      mv /opt/area/client/android/app/build/outputs/apk/release/app-release.apk {{ client_folder }}/client.apk &&
       rm -rf /opt/area/client/android
     "
   args:
