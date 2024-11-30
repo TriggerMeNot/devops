@@ -10,6 +10,12 @@
     - nix
   tags: nix
 
+- name: Docker
+  hosts: all
+  roles:
+    - docker
+  tags: docker
+
 - name: Postgres
   hosts: area
   roles:
