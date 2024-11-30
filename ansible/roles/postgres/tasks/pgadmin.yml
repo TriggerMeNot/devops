@@ -1,0 +1,36 @@
+- name: PGAdmin Docker | Create directory
+  file:
+    path: "{{ pgadmin_server_dir }}"
+    owner: root
+    group: root
+    mode: 0755
+    state: directory
+
+- name: PGAdmin Docker | Configure servers
+  copy:
+    src: pgadmin4/servers.json
+    dest: "{{ pgadmin_server_json_file }}"
+    owner: root
+    group: root
+    mode: 0644
+
+- name: PGAdmin Docker | Create the network
+  docker_network:
+    name: "{{ pgadmin_docker_network.name }}"
+    state: "{{ pgadmin_docker_network.state }}"
+
+- name: PGAdmin Docker | Deploy the container
+  docker_container:
+    name: "{{ pgadmin_docker.name }}"
+    image: "{{ pgadmin_docker.image }}"
+    state: "{{ pgadmin_docker.state }}"
+    ports: "{{ pgadmin_docker.ports }}"
+    env:
+      PGADMIN_DEFAULT_EMAIL: "{{ pgadmin_default_email }}"
+      PGADMIN_DEFAULT_PASSWORD: "{{ pgadmin_default_password }}"
+      PGADMIN_LISTEN_ADDRESS: "{{ pgadmin_listen_address }}"
+      PGADMIN_LISTEN_PORT: "{{ pgadmin_listen_port }}"
+      PGADMIN_SERVER_JSON_FILE: "{{ pgadmin_server_json_file }}"
+    networks:
+      - name: "{{ pgadmin_docker.network }}"
+    volumes: "{{ pgadmin_docker.volumes }}"
