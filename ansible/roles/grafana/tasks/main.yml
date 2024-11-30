@@ -30,6 +30,35 @@
     line: 'http_port = {{ grafana_port }}'
     state: present
 
+- name: Install PostgreSQL plugin
+  command: grafana-cli plugins install grafana-pgsql-datasource
+
+- name: Add "grafanareader" user to PostgreSQL
+  postgresql_user:
+    db: "{{ postgres_db }}"
+    name: grafanareader
+    password: "{{ grafana_db_password }}"
+    priv: SELECT
+
+- name: Add proper permissions to PostgreSQL
+  postgresql_privs:
+    db: "{{ postgres_db }}"
+    privs: SELECT
+    type: database
+    objs: public
+    roles: grafanareader
+
+- name: Add PostgreSQL datasource
+  uri:
+    url: http://localhost:{{ grafana_port }}/api/datasources
+    method: POST
+    body: '{"name":"{{ postgres_db }}","type":"postgres","url":"localhost:5432","access":"proxy","database":"{{ postgres_db }}","user":"grafanareader","password":"{{ grafana_db_password }}"}'
+    headers:
+      Content-Type: "application/json"
+      Authorization: "Bearer {{ grafana_api_key }}"
+    body_format: json
+    status_code: 200
+
 - name: Start Grafana
   service:
     name: grafana-server
