@@ -23,6 +23,13 @@
     name: grafana
     state: present
 
+- name: Change the default Grafana port
+  lineinfile:
+    path: /etc/grafana/grafana.ini
+    regexp: '^http_port = 3000'
+    line: 'http_port = {{ grafana_port }}'
+    state: present
+
 - name: Start Grafana
   service:
     name: grafana-server

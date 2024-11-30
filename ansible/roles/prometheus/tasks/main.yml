@@ -5,7 +5,7 @@
     state: started
     restart_policy: always
     ports:
-      - "9090:9090"
+      - "{{ prometheus_port }}:9090"
     volumes:
       - /etc/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
     env:

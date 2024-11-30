@@ -23,7 +23,7 @@
 - name: Move the build to the web server
   become: true
   become_user: area-client
-  shell: cp dist/ /var/www/html
+  shell: cp dist/ {{ client_folder }}
   args:
     chdir: /opt/area/client
   when: client_dir.changed

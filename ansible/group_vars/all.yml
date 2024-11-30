@@ -1,3 +1,27 @@
 postgres_user:
 postgres_password:
 postgres_db:
+
+backend_port:
+grafana_port:
+prometheus_port:
+pgadmin_port:
+client_folder:
+
+nginx_hosts:
+  backend:
+    - name:
+      port: "{{ backend_port }}"
+      dns:
+  client:
+    - name:
+      folder: "{{ client_folder }}"
+      dns:
+  grafana:
+    - name:
+      port: "{{ grafana_port }}"
+      dns:
+  prometheus:
+    - name:
+      port: "{{ prometheus_port }}"
+      dns:
