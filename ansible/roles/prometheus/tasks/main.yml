@@ -1,0 +1,15 @@
+- name: Start Prometheus Docker container
+  docker_container:
+    name: prometheus
+    image: prom/prometheus
+    state: started
+    restart_policy: always
+    ports:
+      - "9090:9090"
+    volumes:
+      - /etc/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    env:
+      PROMETHEUS_CONFIG_FILE: /etc/prometheus/prometheus.yml
+    networks:
+      - name: prometheus
+    tags: prometheus
