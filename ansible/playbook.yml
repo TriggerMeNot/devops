@@ -34,14 +34,14 @@
     - client
   tags: client
 
-- name: Grafana
-  hosts: area
-  roles:
-    - grafana
-  tags: grafana
-
 - name: Prometheus
   hosts: area
   roles:
     - prometheus
   tags: prometheus
+
+- name: Grafana
+  hosts: area
+  roles:
+    - grafana
+  tags: grafana
