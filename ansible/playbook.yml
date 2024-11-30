@@ -10,6 +10,12 @@
     - nix
   tags: nix
 
+- name: Postgres
+  hosts: area
+  roles:
+    - postgres
+  tags: postgres
+
 - name: Backend
   hosts: area
   roles:
