@@ -19,6 +19,7 @@
     - vim
     - htop
     - logrotate
+    - locales
   become: true
 
 - name: Set timezone

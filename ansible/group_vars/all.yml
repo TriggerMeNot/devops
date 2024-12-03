@@ -1,6 +1,8 @@
 postgres_user:
 postgres_password:
-postgres_db:
+postgres_db: postgres
+postgres_host:
+postgres_port:
 
 backend_port:
 grafana_port:

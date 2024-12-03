@@ -3,4 +3,3 @@
   with_items:
     - postgres.yml
     - pgadmin.yml
-  when: client_dir.changed

@@ -4,12 +4,6 @@
     - base
   tags: base
 
-- name: Nix
-  hosts: all
-  roles:
-    - nix
-  tags: nix
-
 - name: Docker
   hosts: all
   roles:
@@ -45,3 +39,9 @@
   roles:
     - grafana
   tags: grafana
+
+- name: Nginx
+  hosts: area
+  roles:
+    - nginx
+  tags: nginx
