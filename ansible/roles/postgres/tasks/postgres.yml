@@ -61,21 +61,21 @@
     state: started
     enabled: yes
 
-- name: Create user '{{ db_username }}' on PostgreSQL
+- name: Create user '{{ postgres_db }}' on PostgreSQL
   become: true
   become_method: sudo
   become_user: postgres
   community.general.postgresql_user:
-    name: "{{ db_username }}"
-    password: "{{ db_password }}"
+    name: "{{ postgres_db }}"
+    password: "{{ postgres_password }}"
 
-- name: Create database '{{ db_name }}' on PostgreSQL
+- name: Create database '{{ postgres_db }}' on PostgreSQL
   become: true
   become_method: sudo
   become_user: postgres
   community.general.postgresql_db:
-    name: "{{ db_name }}"
-    owner: "{{ db_username }}"
+    name: "{{ postgres_db }}"
+    owner: "{{ postgres_db }}"
     login_host: localhost
     login_unix_socket: /var/run/postgresql
     port: 5432
